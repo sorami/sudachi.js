@@ -1,0 +1,17 @@
+{
+  "name": "sudachi.js",
+  "version": "1.0.0",
+  "description": "Japanese tokenizer Sudachi in JavaScript",
+  "main": "index.js",
+  "repository": "https://github.com/sorami/sudachi.js",
+  "author": "Sorami Hisamoto",
+  "license": "Apache-2.0",
+  "private": true,
+  "devDependencies": {
+    "husky": "^5.0.9",
+    "jest": "^26.6.3",
+    "prettier": "^2.2.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.5"
+  }
+}
