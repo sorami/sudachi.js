@@ -1,3 +1,5 @@
 node_modules/
-build/
+__build__/
 .vscode/
+.DS_Store
+*.dic
