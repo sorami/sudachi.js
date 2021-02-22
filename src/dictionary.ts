@@ -1,47 +1,28 @@
 import fs from 'fs'
-import { Grammar } from './grammar'
-import { Lexicon } from './lexicon'
-
-const DESCRIPTION_SIZE = 256
+import { Header } from './dictionary/header'
+import { Grammar } from './dictionary/grammar'
+import { Lexicon } from './dictionary/lexicon'
 
 export class Dictionary {
-    readonly header: {
-        version: bigint
-        createTime: bigint
-        description: string
-    }
+    private readonly buf: Buffer
+    readonly header: Header
     readonly grammar: Grammar
     readonly lexicon: Lexicon
 
     constructor(filePath: string) {
         try {
-            let buf = Buffer.from(fs.readFileSync(filePath))
+            this.buf = fs.readFileSync(filePath)
             let offset = 0
 
-            // header
-            const version = buf.readBigUInt64LE(offset)
-            offset += 8
+            this.header = new Header(this.buf, offset)
+            offset += this.header.storageSize
 
-            const createTime = buf.readBigInt64LE(offset)
-            offset += 8
+            this.grammar = new Grammar(this.buf, offset)
+            offset += this.grammar.storageSize
 
-            const description = buf.toString(
-                'utf8',
-                offset,
-                offset + DESCRIPTION_SIZE
-            )
-            offset += DESCRIPTION_SIZE
-
-            this.header = { version, createTime, description }
-
-            // grammar
-            this.grammar = new Grammar(buf, offset)
-            offset += this.grammar.storage_size
-
-            // lexicon
-            this.lexicon = new Lexicon(buf, offset)
+            this.lexicon = new Lexicon(this.buf, offset)
         } catch (error) {
-            console.error(`Failed to load setting file '${filePath}':`, error)
+            console.error(`Failed to load dictionary '${filePath}':`, error)
             process.exit(1)
         }
     }

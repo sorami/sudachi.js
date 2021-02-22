@@ -26,5 +26,6 @@ console.log(`version:\t0x${dictionary.header.version.toString(16)}`)
 console.log(`create time:\t${dictionary.header.createTime}`)
 console.log(`description:\t${dictionary.header.description}`)
 
-const surface = dictionary.lexicon.getWordInfo(77777)
-console.log(surface)
+const wordInfo = dictionary.lexicon.getWordInfo(9999)
+console.log(wordInfo)
+console.log(dictionary.grammar.getPartOfSpeechString(wordInfo.posId))

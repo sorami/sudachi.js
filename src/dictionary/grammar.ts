@@ -1,45 +1,52 @@
-const POS_DEPTH = 6
-
 export class Grammar {
+    private POS_DEPTH = 6
+    private BOS_PARAMETER = [0, 0, 0]
+    private EOS_PARAMETER = [0, 0, 0]
+
     private buf: Buffer
-    private posSize: number
+    private posList: string[][]
+    private connectTableOffset: number
     private leftIdSize: number
     private rightIdSize: number
-    private connectTableOffset: number
-    readonly storage_size: number
+    readonly storageSize: number
 
     constructor(buf: Buffer, offset: number) {
         let originalOffset = offset
 
         this.buf = buf
 
-        this.posSize = buf.readUInt16LE(offset)
+        const posSize = buf.readUInt16LE(offset)
         offset += 2
 
-        for (let i = 0; i < this.posSize; i++) {
+        this.posList = []
+        for (let i = 0; i < posSize; i++) {
             let pos: string[] = []
-            for (let j = 0; j < POS_DEPTH; j++) {
+            for (let j = 0; j < this.POS_DEPTH; j++) {
                 const length = buf.readInt8(offset)
                 offset += 1
-                const s = buf.toString('utf16le', offset, offset + 2 * length)
+                pos.push(buf.toString('utf16le', offset, offset + 2 * length))
                 offset += 2 * length
-                pos.push(s)
             }
-            // console.log(`${i}:\t${pos}`);
+            this.posList.push(pos)
         }
 
         this.leftIdSize = buf.readInt16LE(offset)
         offset += 2
         this.rightIdSize = buf.readInt16LE(offset)
         offset += 2
-
         this.connectTableOffset = offset
 
-        // buf.readInt16LE(CONNECT_TABLE_OFFSET + 2 * leftIdSize * leftId + rightId)}`);
-
-        this.storage_size =
+        this.storageSize =
             this.connectTableOffset +
             2 * this.leftIdSize * this.rightIdSize -
             originalOffset
+    }
+
+    getPartOfSpeechString(posId: number): string[] {
+        return this.posList[posId]
+    }
+
+    getConnectCost(left: number, right: number): number {
+        throw new Error('Not implemented')
     }
 }
