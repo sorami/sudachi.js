@@ -29,3 +29,7 @@ console.log(`description:\t${dictionary.header.description}`)
 const wordInfo = dictionary.lexicon.getWordInfo(9999)
 console.log(wordInfo)
 console.log(dictionary.grammar.getPartOfSpeechString(wordInfo.posId))
+
+const tokenizer = dictionary.create()
+const result = tokenizer.tokenize('カンヌ国際映画祭')
+console.log(result)

@@ -2,6 +2,7 @@ import fs from 'fs'
 import { Header } from './dictionary/header'
 import { Grammar } from './dictionary/grammar'
 import { Lexicon } from './dictionary/lexicon'
+import { Tokenizer } from './tokenizer'
 
 export class Dictionary {
     private readonly buf: Buffer
@@ -25,5 +26,9 @@ export class Dictionary {
             console.error(`Failed to load dictionary '${filePath}':`, error)
             process.exit(1)
         }
+    }
+
+    create(): Tokenizer {
+        return new Tokenizer(this.grammar, this.lexicon)
     }
 }

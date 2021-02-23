@@ -25,6 +25,11 @@ export class Lexicon {
         this.wordInfos = new WordInfoList(buf, offset, this.wordParams.size)
     }
 
+    lookup(text: ArrayBuffer, offset: number) {
+        return this.trie.commonPrefixSearch(text, offset)
+        // TODO: iterator, not list
+    }
+
     getWordInfo(wordId: number) {
         return this.wordInfos.getWordInfo(wordId)
     }
