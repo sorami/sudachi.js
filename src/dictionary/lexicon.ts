@@ -12,9 +12,9 @@ export class Lexicon {
     constructor(buf: Buffer, offset: number) {
         const trieSize = buf.readUInt32LE(offset)
         offset += 4
-        const trieOffset = offset
-        this.trie = new Trie(trieOffset)
-        offset += trieSize * 4
+        const trieArray = new DataView(buf.buffer, offset, trieSize * 4)
+        this.trie = new Trie(trieArray, trieSize)
+        offset += this.trie.totalSize()
 
         this.wordIdTable = new WordIdTable(buf, offset)
         offset += this.wordIdTable.storageSize()
