@@ -1,7 +1,7 @@
 export class Grammar {
     private POS_DEPTH = 6
-    private BOS_PARAMETER = [0, 0, 0]
-    private EOS_PARAMETER = [0, 0, 0]
+    readonly BOS_PARAMETER = [0, 0, 0]
+    readonly EOS_PARAMETER = [0, 0, 0]
 
     private buf: Buffer
     private posList: string[][]
@@ -11,7 +11,7 @@ export class Grammar {
     readonly storageSize: number
 
     constructor(buf: Buffer, offset: number) {
-        let originalOffset = offset
+        const originalOffset = offset
 
         this.buf = buf
 
@@ -47,6 +47,8 @@ export class Grammar {
     }
 
     getConnectCost(left: number, right: number): number {
-        throw new Error('Not implemented')
+        return this.buf.readInt16LE(
+            this.connectTableOffset + left * 2 + 2 * this.leftIdSize * right
+        )
     }
 }
